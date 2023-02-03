@@ -1,0 +1,13 @@
+4.000.000.000 int
+32.000 small int
+256 tiny int
+
+CPF - 11 numeros
+CEP - 8 numeros
+NUMERO - DDD+9+NUMERO
+AGENCIA - 4 numeros
+NUMERO(da conta) - 8 numeros
+PONTUACAO - (0 a 10) pontos
+
+DOMÍNIOS NAO SAO IDENTITY!!!!(inserts dos id's sao manuais)
+Domínio: pontuacao / tipo usuario / status / tipo conta / tipo contato / uf
