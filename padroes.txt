@@ -11,3 +11,8 @@ PONTUACAO - (0 a 10) pontos
 
 DOMÍNIOS NAO SAO IDENTITY!!!!(inserts dos id's sao manuais)
 Domínio: pontuacao / tipo usuario / status / tipo conta / tipo contato / uf
+
+id usuario funcionarios: 1 ao 5
+id usuario clientes: 6 ao 15
+
+Nota: as tabelas extratos e empréstimos estão vazias, se quiser alterar elas, tem que dar um update (update [table] SET [atributos] = [novo valor] WHERE id = [id da conta que quiser mudar]) 
