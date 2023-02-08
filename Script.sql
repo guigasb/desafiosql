@@ -1,5 +1,6 @@
 CREATE DATABASE Banco;
 USE Banco;
+drop database banco
 
 CREATE TABLE tipo_usuario(
 	id TINYINT PRIMARY KEY,
@@ -264,6 +265,17 @@ INSERT INTO cidade VALUES
 (27,'Brasilia'),
 (27,'Ceilândia');
 
+
+/*
+CPF - 11 numeros
+CEP - 8 numeros
+NUMERO - DDD+9+NUMERO
+AGENCIA - 4 numeros
+NUMERO(da conta) - 8 numeros
+
+Id Usuario Funcionarios: 1 ao 5
+id Usuario Clientes: 6 ao 15 (nao confundir com cliente(id))
+*/
 INSERT INTO endereco VALUES 
 (7, 1, 'Rua Jose Patricio de Almeida', '104B', 'Mangabeira', 58039650, NULL, 6, '20220226 14:34:00', 6, '20220226 14:34:00'),
 (17, 2, 'Rua Epitacio Pessoa', '23', 'Cristo', 58037608, NULL, 7, '20220228 16:01:00', 7, '20220228 16:01:00'),
@@ -338,3 +350,223 @@ INSERT INTO extrato VALUES
 (8, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
 (9, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
 (10, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56');
+
+
+
+---------------------------------------SP INSERT CLIENTE BANCO--------------------------------------------
+IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.InsCliente]') AND objectproperty(ID,N'isProcedure') = 1)
+	DROP PROCEDURE [SP.InsCliente]	
+
+GO
+
+CREATE PROCEDURE [SP.InsCliente]
+	@nome		varchar(60),
+	@sobrenome		varchar(100),
+	@CPF		BIGINT,
+	@data_nascimento DATE,
+	@usuario INT
+	AS
+
+	/*Documentação
+	Arquivo Fonte ......: Script.sql
+	Objetivo ...........: Inserir um novo cliente na tabela Cliente
+							return 0 - execuçao ok
+
+	Autor ..............: Gabriel Gouveia
+	Data ...............: 16/02/2023
+	Ex .................: EXEC [SP.InsCliente] @nome = 'Matias', @sobrenome = 'Santos', @CPF = 89258014738, @data_nascimento = '19670518', @usuario = 1
+	Códigos de retorno: 0 - excução ok
+	*/
+
+	BEGIN 
+		INSERT INTO cliente
+		VALUES (@nome,@sobrenome,@CPF,@data_nascimento,@usuario, GETDATE(),@usuario,GETDATE())
+		RETURN 0
+	END
+GO
+
+
+
+
+
+
+
+
+
+
+---------------------------------------SP UPDATE STATUS CONTA BANCO--------------------------------------------
+IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.UpStatus]') AND objectproperty(ID,N'isProcedure') = 1)
+	DROP PROCEDURE [SP.UpStatus]	
+
+GO
+
+CREATE PROCEDURE [SP.UpStatus]
+	@status TINYINT,
+	@id_cliente INT
+	AS
+
+	/*Documentação
+	Arquivo Fonte ......: Script.sql
+	Objetivo ...........: Ativa, inativa ou suspende uma conta de um cliente
+							return 0 - execuçao ok
+							@status: 1 = Ativo
+									 2 = Inativo
+									 3 = Suspensa
+
+	Autor ..............: Gabriel Gouveia
+	Data ...............: 16/02/2023
+	Ex .................: EXEC [SP.UpStatus] @status = 3, @id_cliente = 10
+	*/
+
+	BEGIN 
+		UPDATE conta SET id_status = @status WHERE id_cliente = @id_cliente 
+		RETURN 0
+	END
+GO
+
+
+
+
+
+
+
+
+---------------------------------------SP DEPOSITO CONTA BANCO--------------------------------------------
+IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.DepositoConta]') AND objectproperty(ID,N'isProcedure') = 1)
+	DROP PROCEDURE [SP.DepositoConta]	
+
+GO
+
+CREATE PROCEDURE [SP.DepositoConta]
+	@valor MONEY,
+	@id_conta INT,
+	@id_usuario INT
+	AS
+
+	/*Documentação
+	Arquivo Fonte ......: Script.sql
+	Objetivo ...........: Faz o deposito de dinheiro em uma conta de um cliente
+							return 0 - execuçao ok
+
+	Autor ..............: Gabriel Gouveia
+	Data ...............: 16/02/2023
+	Ex .................: EXEC [SP.DepositoConta] @valor = 100.00, @id_conta  = 1, @id_usuario = 3
+	*/
+
+	BEGIN 
+		UPDATE conta SET saldo = saldo + @valor, usuario_ultima_alteracao = @id_usuario, data_ultima_alteracao = GETDATE() WHERE id = @id_conta;
+		INSERT INTO extrato VALUES (@id_conta, 1, GETDATE(), @valor, NULL, @id_usuario, GETDATE(), @id_usuario, GETDATE());
+		RETURN 0
+	END
+GO
+
+
+---------------------------------------SP SAQUE CONTA BANCO--------------------------------------------
+IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.SaqueConta]') AND objectproperty(ID,N'isProcedure') = 1)
+	DROP PROCEDURE [SP.SaqueConta]	
+
+GO
+
+CREATE PROCEDURE [SP.SaqueConta]
+	@valor MONEY,
+	@id_conta INT,
+	@id_usuario INT
+	AS
+
+	/*Documentação
+	Arquivo Fonte ......: Script.sql
+	Objetivo ...........: Faz o deposito de dinheiro em uma conta de um cliente
+							return 0 - execuçao ok
+
+	Autor ..............: Gabriel Gouveia
+	Data ...............: 16/02/2023
+	Ex .................: EXEC [SP.SaqueConta] @valor = 100.00, @id_conta  = 1, @id_usuario = 3
+	*/
+
+	BEGIN 
+		UPDATE conta SET saldo = saldo - @valor, usuario_ultima_alteracao = @id_usuario, data_ultima_alteracao = GETDATE() WHERE id = @id_conta;
+		INSERT INTO extrato VALUES (@id_conta, 2, GETDATE(), @valor, NULL, @id_usuario, GETDATE(), @id_usuario, GETDATE());
+		RETURN 0
+	END
+GO
+
+
+---------------------------------------SP TRANSFERENCIA CONTA BANCO--------------------------------------------
+IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.TransfConta]') AND objectproperty(ID,N'isProcedure') = 1)
+	DROP PROCEDURE [SP.TransfConta]	
+
+GO
+
+CREATE PROCEDURE [SP.TransfConta]
+	@valor MONEY,
+	@id_conta INT,
+	@conta_transferencia INT,
+	@id_usuario INT
+	AS
+
+	/*Documentação
+	Arquivo Fonte ......: Script.sql
+	Objetivo ...........: Faz o deposito de dinheiro em uma conta de um cliente
+							return 0 - execuçao ok
+
+	Autor ..............: Gabriel Gouveia
+	Data ...............: 16/02/2023
+	Ex .................: EXEC [SP.TransfConta] @valor = 100.00, @id_conta  = 1, @conta_transferencia = 2, @id_usuario = 3
+	*/
+
+	BEGIN 
+		UPDATE conta SET saldo = saldo - @valor, usuario_ultima_alteracao = @id_usuario, data_ultima_alteracao = GETDATE() WHERE id = @id_conta;
+		UPDATE conta SET saldo = saldo + @valor, usuario_ultima_alteracao = @id_usuario, data_ultima_alteracao = GETDATE() WHERE id = @conta_transferencia;
+		INSERT INTO extrato VALUES (@id_conta, 3, GETDATE(), -@valor, @conta_transferencia, @id_usuario, GETDATE(), @id_usuario, GETDATE());
+		INSERT INTO extrato VALUES (@conta_transferencia, 3, GETDATE(), +@valor, @id_conta, @id_usuario, GETDATE(), @id_usuario, GETDATE());
+		RETURN 0
+	END
+GO
+
+
+
+
+
+
+---------------------------------------SP EXTRATO CLIENTE SMN--------------------------------------------
+IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.ExtratoConta]') AND objectproperty(ID,N'isProcedure') = 1)
+	DROP PROCEDURE [SP.ExtratoConta]	
+
+GO
+
+CREATE PROCEDURE [SP.ExtratoConta]
+	@id_cliente INT
+	AS
+
+	/*Documentação
+	Arquivo Fonte ......: Script.sql
+	Objetivo ...........: Apresenta o relatorio com todo o extrato de transacoes de um cliente
+							return 0 - execuçao ok
+
+	Autor ..............: Gabriel Gouveia
+	Data ...............: 16/02/2023
+	Ex .................: EXEC [SP.ExtratoConta] @id_cliente = 1
+	*/
+
+	BEGIN 
+		SELECT CONCAT(cl.nome,' ' ,cl.sobrenome) AS 'Nome Completo', tm.descricao AS 'Tipo Movimentacao',ex.valor AS Valor, ex.data AS 'Data Transacao', ex.usuario_transferido
+		FROM extrato ex
+		INNER JOIN conta ct
+		ON ex.id_conta = ct.id
+		INNER JOIN cliente cl
+		ON ct.id_cliente = cl.id
+		INNER JOIN tipo_movimentacao tm
+		ON tm.id = ex.id_tipo_movimentacao
+		WHERE cl.id = @id_cliente
+		RETURN 0
+	END
+GO
+
+---podem ignorar os comandos debaixo---
+select * from conta
+select * from extrato
+select * from tipo_movimentacao
+
+SELECT cl.nome, cl.sobrenome, ct.saldo FROM conta ct
+INNER JOIN cliente cl
+ON ct.id_cliente = cl.id
