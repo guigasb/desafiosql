@@ -305,8 +305,8 @@ INSERT INTO contato VALUES
 
 INSERT INTO tipo_conta VALUES 
 (1,'Conta Corrente', 2, '20220222 15:45:00'),
-(2,'Conta Poupança', 3, '20220222 15:45:00'),
-(3,'Conta Corrente e Poupança', 4, '20220222 15:45:00');
+(2,'Conta Poupanca', 3, '20220222 15:45:00'),
+(3,'Conta Corrente e Poupanca', 4, '20220222 15:45:00');
 
 INSERT INTO status VALUES (1,'Ativo'),
 (2,'Inativo'),
@@ -369,7 +369,7 @@ CREATE PROCEDURE [SP.InsCliente]
 
 	/*Documentação
 	Arquivo Fonte ......: Script.sql
-	Objetivo ...........: Inserir um novo cliente na tabela Cliente
+	Objetivo ...........: Insere um novo cliente na tabela Cliente
 							return 0 - execuçao ok
 
 	Autor ..............: Gabriel Gouveia
@@ -475,7 +475,7 @@ CREATE PROCEDURE [SP.SaqueConta]
 
 	/*Documentação
 	Arquivo Fonte ......: Script.sql
-	Objetivo ...........: Faz o deposito de dinheiro em uma conta de um cliente
+	Objetivo ...........: Faz o saque de dinheiro em uma conta de um cliente
 							return 0 - execuçao ok
 
 	Autor ..............: Gabriel Gouveia
@@ -506,7 +506,7 @@ CREATE PROCEDURE [SP.TransfConta]
 
 	/*Documentação
 	Arquivo Fonte ......: Script.sql
-	Objetivo ...........: Faz o deposito de dinheiro em uma conta de um cliente
+	Objetivo ...........: Faz a transferencia de dinheiro em uma conta e outra de clientes
 							return 0 - execuçao ok
 
 	Autor ..............: Gabriel Gouveia
