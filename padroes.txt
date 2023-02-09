@@ -14,4 +14,29 @@ Domínio: pontuacao / tipo usuario / status / tipo conta / tipo contato / uf
 id usuario funcionarios: 1 ao 5
 id usuario clientes: 6 ao 15
 
+@status:
+1 = Ativo
+2 = Inativo
+3 = Suspensa
+
+Tipo_contato: 
+1 = Celular
+2 = Telefone Residencial
+
+Tipo_conta: 
+1 = Conta Corrente
+2 = Poupanca 
+3 = Conta Corrente e Poupanca
+
+Tipo_movimentacao:
+1 = deposito
+2 = saque
+3 = transferencia
+
+Status:
+1 = Ativo
+2 = Inativo
+3 = Suspensa
 Nota: as tabelas extratos e empréstimos estão vazias, se quiser alterar elas, tem que dar um update (update [table] SET [atributos] = [novo valor] WHERE id = [id da conta que quiser mudar]) 
+
+

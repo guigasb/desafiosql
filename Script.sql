@@ -288,7 +288,8 @@ INSERT INTO endereco VALUES
 (9, 9, 'Avenida Mato Grosso', '2', 'Intermares', 59274950, 'Bloco B', 14, '20230104 06:32:00', 14, '20230104 06:32:00'),
 (2, 10, 'Rua Luiz Lianza', '19', 'Bancarios', 63829025, 'Bloco 4 Apto 103', 15, '20230124 10:23:00', 15, '20230124 10:23:00');
 
-INSERT INTO tipo_contato VALUES (1, 'Celular'),
+INSERT INTO tipo_contato VALUES 
+(1, 'Celular'),
 (2, 'Telefone Residencial');
 
 INSERT INTO contato VALUES 
@@ -308,7 +309,8 @@ INSERT INTO tipo_conta VALUES
 (2,'Conta Poupanca', 3, '20220222 15:45:00'),
 (3,'Conta Corrente e Poupanca', 4, '20220222 15:45:00');
 
-INSERT INTO status VALUES (1,'Ativo'),
+INSERT INTO status VALUES 
+(1,'Ativo'),
 (2,'Inativo'),
 (3,'Suspensa');
 
