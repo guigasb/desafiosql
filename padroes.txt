@@ -14,10 +14,10 @@ Domínio: pontuacao / tipo usuario / status / tipo conta / tipo contato / uf
 id usuario funcionarios: 1 ao 5
 id usuario clientes: 6 ao 15
 
-@status:
-1 = Ativo
-2 = Inativo
-3 = Suspensa
+Tipo_usuario:
+1 = Administrador
+2 = Cliente
+3 = Funcionario
 
 Tipo_contato: 
 1 = Celular

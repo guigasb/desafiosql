@@ -147,7 +147,8 @@ CREATE TABLE extrato(
 	CONSTRAINT fk_extrato_tipo_movimentacao FOREIGN KEY (id_tipo_movimentacao) REFERENCES tipo_movimentacao(id)
 );
 
-INSERT INTO tipo_usuario VALUES (1,'administrador',1,'20220211 12:08:12'),
+INSERT INTO tipo_usuario VALUES 
+(1,'administrador',1,'20220211 12:08:12'),
 (2,'cliente',1,'20220212 07:30:16'),
 (3,'funcionario',1,'20220212 07:30:20');
 
