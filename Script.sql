@@ -573,3 +573,5 @@ select * from tipo_movimentacao
 SELECT cl.nome, cl.sobrenome, ct.saldo FROM conta ct
 INNER JOIN cliente cl
 ON ct.id_cliente = cl.id
+
+--datetimenow
