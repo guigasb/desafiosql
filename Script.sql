@@ -1,6 +1,5 @@
 CREATE DATABASE Banco;
 USE Banco;
-drop database banco
 
 CREATE TABLE tipo_usuario(
 	id TINYINT PRIMARY KEY,
@@ -16,8 +15,8 @@ CREATE TABLE usuario(
 	senha VARCHAR(64) NOT NULL,
 	usuario_cadastro INT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
-	usuario_ultima_alteracao INT NOT NULL,
-	data_ultima_alteracao DATETIME NOT NULL,
+	usuario_ultima_alteracao INT,
+	data_ultima_alteracao DATETIME,
 	CONSTRAINT fk_usuario_tipo_usuario FOREIGN KEY (id_tipo_usuario) REFERENCES tipo_usuario(id)
 );
 
@@ -29,8 +28,8 @@ CREATE TABLE cliente(
 	data_nascimento DATETIME NOT NULL,
 	usuario_cadastro INT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
-	usuario_ultima_alteracao INT NOT NULL,
-	data_ultima_alteracao DATETIME NOT NULL
+	usuario_ultima_alteracao INT,
+	data_ultima_alteracao DATETIME
 );
 
 CREATE TABLE uf(
@@ -57,8 +56,8 @@ CREATE TABLE endereco(
 	complemento VARCHAR(100),
 	usuario_cadastro INT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
-	usuario_ultima_alteracao INT NOT NULL,
-	data_ultima_alteracao DATETIME NOT NULL,
+	usuario_ultima_alteracao INT,
+	data_ultima_alteracao DATETIME,
 	CONSTRAINT fk_endereco_cidade FOREIGN KEY (id_cidade) REFERENCES cidade(id),
 	CONSTRAINT fk_endereco_cliente FOREIGN KEY (id_cliente) REFERENCES cliente(id)
 );
@@ -76,8 +75,8 @@ CREATE TABLE contato(
 	whatsapp BIT NOT NULL,
 	usuario_cadastro INT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
-	usuario_ultima_alteracao INT NOT NULL,
-	data_ultima_alteracao DATETIME NOT NULL,
+	usuario_ultima_alteracao INT,
+	data_ultima_alteracao DATETIME,
 	CONSTRAINT fk_contato_cliente FOREIGN KEY (id_cliente) REFERENCES cliente(id),
 	CONSTRAINT fk_endereco_tipo_contato FOREIGN KEY (id_tipo_contato) REFERENCES tipo_contato(id)
 );
@@ -104,8 +103,8 @@ CREATE TABLE conta(
 	numero_conta INT NOT NULL UNIQUE,
 	usuario_cadastro INT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
-	usuario_ultima_alteracao INT NOT NULL,
-	data_ultima_alteracao DATETIME NOT NULL,
+	usuario_ultima_alteracao INT,
+	data_ultima_alteracao DATETIME,
 	CONSTRAINT fk_conta_cliente FOREIGN KEY (id_cliente) REFERENCES cliente(id),
 	CONSTRAINT fk_conta_status FOREIGN KEY (id_status) REFERENCES status(id),
 	CONSTRAINT fk_conta_tipo_conta FOREIGN KEY (id_tipo_conta) REFERENCES tipo_conta(id)
@@ -120,8 +119,8 @@ CREATE TABLE emprestimo(
 	dias_atraso SMALLINT NOT NULL,
 	usuario_cadastro INT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
-	usuario_ultima_alteracao INT NOT NULL,
-	data_ultima_alteracao DATETIME NOT NULL,
+	usuario_ultima_alteracao INT,
+	data_ultima_alteracao DATETIME,
 	CONSTRAINT fk_emprestimo_conta FOREIGN KEY (id_conta) REFERENCES conta(id)
 );
 
@@ -141,8 +140,8 @@ CREATE TABLE extrato(
 	usuario_transferido INT,
 	usuario_cadastro INT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
-	usuario_ultima_alteracao INT NOT NULL,
-	data_ultima_alteracao DATETIME NOT NULL,
+	usuario_ultima_alteracao INT,
+	data_ultima_alteracao DATETIME,
 	CONSTRAINT fk_extrato_conta FOREIGN KEY (id_conta) REFERENCES conta(id),
 	CONSTRAINT fk_extrato_tipo_movimentacao FOREIGN KEY (id_tipo_movimentacao) REFERENCES tipo_movimentacao(id)
 );
@@ -153,33 +152,33 @@ INSERT INTO tipo_usuario VALUES
 (3,'funcionario',1,'20220212 07:30:20');
 
 INSERT INTO usuario VALUES 
-(1, 'jose.gabriel@smn.com.br', 'fh4MCB1213', 1, '20220215 17:33:56', 1, '20220211 17:33:56'),
-(3, 'guilherme.neves@smn.com.br', 'jKDGSNbAJs', 1, '20220218 10:27:00', 1, '20220218 10:27:00'),
-(3, 'andressa.abrantes@smn.com.br', 'Jn927fuhad', 1, '20220219 04:09:00', 1, '20220219 04:09:00'),
-(3, 'jorge.neto@smn.com.br', '2987fh2FDS', 3, '20220222 15:45:00', 3, '20220222 15:45:00'),
-(3, 'mateus.dom@smn.com.br', 'asSFDSV#318d', 3, '20220222 15:45:00', 3, '20220222 15:45:00'),
-(2, 'joaosilva@outlook.com', 'MsasfSD341G', 6, '20220226 14:34:00', 6, '20220226 14:34:00'),
-(2, 'marianetneves@hotmail.com', 'N37914TF3GYB', 7, '20220228 16:01:00', 7, '20220228 16:01:00'),
-(2, 'andrealves@yahoo.com.br', 'nuivjd348i0DF', 8, '20220301 12:30:00', 8, '20220301 12:30:00'),
-(2, 'cleide_ane@hotmail.com', ',csoaikdds492', 9, '20220306 09:08:00', 9, '20220306 09:08:00'),
-(2, 'mariajose@bol.com.br', 'senha123', 10, '20220513 12:26:00', 10, '20220513 12:26:00'),
-(2, 'joanasocorro@outlook.com', 'jans1298hAS', 11, '20220630 15:25:00', 11, '20220630 15:25:00'),
-(2, 'pedrodantas@outlook.com', 'pqkd129e-asd', 12, '20220829 12:39:00', 12, '20220829 12:39:00'),
-(2, 'paulorabelo@yahoo.com.br', 'nsaa2173afj', 13, '20221218 11:35:00', 13, '20221218 11:35:00'),
-(2, 'jeffersondias@gmail.com', 'ehdue18!54', 14, '20230104 06:32:00', 14, '20230104 06:32:00'),
-(2, 'dexterpsy@gmail.com', 'FYTybGfh38', 15, '20230124 10:23:00', 15, '20230124 10:23:00');
+(1, 'jose.gabriel@smn.com.br', 'fh4MCB1213', 1, '20220215 17:33:56', NULL, NULL),
+(3, 'guilherme.neves@smn.com.br', 'jKDGSNbAJs', 1, '20220218 10:27:00', NULL, NULL),
+(3, 'andressa.abrantes@smn.com.br', 'Jn927fuhad', 1, '20220219 04:09:00', NULL, NULL),
+(3, 'jorge.neto@smn.com.br', '2987fh2FDS', 3, '20220222 15:45:00', NULL, NULL),
+(3, 'mateus.dom@smn.com.br', 'asSFDSV#318d', 3, '20220222 15:45:00', NULL, NULL),
+(2, 'joaosilva@outlook.com', 'MsasfSD341G', 6, '20220226 14:34:00', NULL, NULL),
+(2, 'marianetneves@hotmail.com', 'N37914TF3GYB', 7, '20220228 16:01:00', NULL, NULL),
+(2, 'andrealves@yahoo.com.br', 'nuivjd348i0DF', 8, '20220301 12:30:00', NULL, NULL),
+(2, 'cleide_ane@hotmail.com', ',csoaikdds492', 9, '20220306 09:08:00', NULL, NULL),
+(2, 'mariajose@bol.com.br', 'senha123', 10, '20220513 12:26:00', NULL, NULL),
+(2, 'joanasocorro@outlook.com', 'jans1298hAS', 11, '20220630 15:25:00', NULL, NULL),
+(2, 'pedrodantas@outlook.com', 'pqkd129e-asd', 12, '20220829 12:39:00', NULL, NULL),
+(2, 'paulorabelo@yahoo.com.br', 'nsaa2173afj', 13, '20221218 11:35:00', NULL, NULL),
+(2, 'jeffersondias@gmail.com', 'ehdue18!54', 14, '20230104 06:32:00', NULL, NULL),
+(2, 'dexterpsy@gmail.com', 'FYTybGfh38', 15, '20230124 10:23:00', NULL, NULL);
 
 INSERT INTO cliente VALUES 
-('Joao', 'Silva Neto', 81389302153, '19980115', 6, '20220226 14:34:00', 6, '20220226 14:34:00'),
-('Mariane', 'Travassos Neves', 92817398297, '19950115', 7, '20220228 16:01:00', 7, '20220228 16:01:00'),
-('Andre', 'Alves Dias', 12984612909, '19870115', 8, '20220301 12:30:00', 8, '20220301 12:30:00'),
-('Cleideane', 'Anne Gouveia Santos', 27813768276, '19940115', 9, '20220306 09:08:00', 9, '20220306 09:08:00'),
-('Maria', 'Jose da Silva', 82394729833, '19940115', 10, '20220513 12:26:00', 10, '20220513 12:26:00'),
-('Joana', 'Socorro Aparecida', 28304732893, '19850115', 11, '20220630 15:25:00', 11, '20220630 15:25:00'),
-('Pedro', 'Dantas Filho', 19823692843, '19960115', 12, '20220829 12:39:00', 12, '20220829 12:39:00'),
-('Paulo', 'Rabelo', 01298739218, '19930115', 13, '20221218 11:35:00', 13, '20221218 11:35:00'),
-('Jefferson', 'Dias Melo', 28913809732, '19780115', 14, '20230104 06:32:00', 14, '20230104 06:32:00'),
-('Dexter', 'Smith', 65043987649, '19580115', 15, '20230124 10:23:00', 15, '20230124 10:23:00');
+('Joao', 'Silva Neto', 81389302153, '19980115', 6, '20220226 14:34:00', NULL, NULL),
+('Mariane', 'Travassos Neves', 92817398297, '19950115', 7, '20220228 16:01:00', NULL, NULL),
+('Andre', 'Alves Dias', 12984612909, '19870115', 8, '20220301 12:30:00', NULL, NULL),
+('Cleideane', 'Anne Gouveia Santos', 27813768276, '19940115', 9, '20220306 09:08:00', NULL, NULL),
+('Maria', 'Jose da Silva', 82394729833, '19940115', 10, '20220513 12:26:00', NULL, NULL),
+('Joana', 'Socorro Aparecida', 28304732893, '19850115', 11, '20220630 15:25:00', NULL, NULL),
+('Pedro', 'Dantas Filho', 19823692843, '19960115', 12, '20220829 12:39:00', NULL, NULL),
+('Paulo', 'Rabelo', 01298739218, '19930115', 13, '20221218 11:35:00', NULL, NULL),
+('Jefferson', 'Dias Melo', 28913809732, '19780115', 14, '20230104 06:32:00', NULL, NULL),
+('Dexter', 'Smith', 65043987649, '19580115', 15, '20230124 10:23:00', NULL, NULL);
 
 INSERT INTO uf VALUES 
 (1, 'AC', 'Acre'),
@@ -278,32 +277,32 @@ Id Usuario Funcionarios: 1 ao 5
 id Usuario Clientes: 6 ao 15 (nao confundir com cliente(id))
 */
 INSERT INTO endereco VALUES 
-(7, 1, 'Rua Jose Patricio de Almeida', '104B', 'Mangabeira', 58039650, NULL, 6, '20220226 14:34:00', 6, '20220226 14:34:00'),
-(17, 2, 'Rua Epitacio Pessoa', '23', 'Cristo', 58037608, NULL, 7, '20220228 16:01:00', 7, '20220228 16:01:00'),
-(24, 3, 'Avenida Ruy Carneiro', '99', 'Jardim Oceania', 73628564, 'Apto 101', 8, '20220301 12:30:00', 8, '20220301 12:30:00'),
-(3, 4, 'Avenida Antonio Lira', '1003', 'Manaira', 58009246, 'Bloco 2', 9, '20220306 09:08:00', 9, '20220306 09:08:00'),
-(4, 5, 'Rua Profa. Maria Sales', 'S/N', 'Tambau', 58039204, 'Apto 300', 10, '20220513 12:26:00', 10, '20220513 12:26:00'),
-(16, 6, 'BR-230', '101', 'Estados', 58037837, NULL, 11, '20220630 15:25:00', 11, '20220630 15:25:00'),
-(21, 7, 'Avenida Gov. Argemiro de Figueiredo', '4990', 'Torre', 57357608, 'Condominio dos Jardins', 12, '20220829 12:39:00', 12, '20220829 12:39:00'),
-(18, 8, 'Rua Telegrafista Cicero Caldas', '291B', 'Bessa', 55437608, 'Apto 300', 13, '20221218 11:35:00', 13, '20221218 11:35:00'),
-(9, 9, 'Avenida Mato Grosso', '2', 'Intermares', 59274950, 'Bloco B', 14, '20230104 06:32:00', 14, '20230104 06:32:00'),
-(2, 10, 'Rua Luiz Lianza', '19', 'Bancarios', 63829025, 'Bloco 4 Apto 103', 15, '20230124 10:23:00', 15, '20230124 10:23:00');
+(7, 1, 'Rua Jose Patricio de Almeida', '104B', 'Mangabeira', 58039650, NULL, 6, '20220226 14:34:00', NULL, NULL),
+(17, 2, 'Rua Epitacio Pessoa', '23', 'Cristo', 58037608, NULL, 7, '20220228 16:01:00', NULL, NULL),
+(24, 3, 'Avenida Ruy Carneiro', '99', 'Jardim Oceania', 73628564, 'Apto 101', 8, '20220301 12:30:00', NULL, NULL),
+(3, 4, 'Avenida Antonio Lira', '1003', 'Manaira', 58009246, 'Bloco 2', 9, '20220306 09:08:00', NULL, NULL),
+(4, 5, 'Rua Profa. Maria Sales', 'S/N', 'Tambau', 58039204, 'Apto 300', 10, '20220513 12:26:00', NULL, NULL),
+(16, 6, 'BR-230', '101', 'Estados', 58037837, NULL, 11, '20220630 15:25:00', NULL, NULL),
+(21, 7, 'Avenida Gov. Argemiro de Figueiredo', '4990', 'Torre', 57357608, 'Condominio dos Jardins', 12, '20220829 12:39:00', NULL, NULL),
+(18, 8, 'Rua Telegrafista Cicero Caldas', '291B', 'Bessa', 55437608, 'Apto 300', 13, '20221218 11:35:00', NULL, NULL),
+(9, 9, 'Avenida Mato Grosso', '2', 'Intermares', 59274950, 'Bloco B', 14, '20230104 06:32:00', NULL, NULL),
+(2, 10, 'Rua Luiz Lianza', '19', 'Bancarios', 63829025, 'Bloco 4 Apto 103', 15, '20230124 10:23:00', NULL, NULL);
 
 INSERT INTO tipo_contato VALUES 
 (1, 'Celular'),
 (2, 'Telefone Residencial');
 
 INSERT INTO contato VALUES 
-(1, 1, 83987283746, 1, 6, '20220226 14:34:00', 6, '20220226 14:34:00'),
-(2, 2, 8897328467, 1, 7, '20220228 16:01:00', 7, '20220228 16:01:00'),
-(3, 2, 8348976348, 1, 8, '20220301 12:30:00', 8, '20220301 12:30:00'),
-(4, 1, 83980394237, 0, 9, '20220306 09:08:00', 9, '20220306 09:08:00'),
-(5, 1, 85990378264, 0, 10, '20220513 12:26:00', 10, '20220513 12:26:00'),
-(6, 2, 8330784632, 1, 11, '20220630 15:25:00', 11, '20220630 15:25:00'),
-(7, 1, 11994839283, 1, 12, '20220829 12:39:00', 12, '20220829 12:39:00'),
-(8, 2, 6998372488, 1, 13, '20221218 11:35:00', 13, '20221218 11:35:00'),
-(9, 2, 8580384692, 1, 14, '20230104 06:32:00', 14, '20230104 06:32:00'),
-(10, 1, 83984034008, 0, 15, '20230124 10:23:00', 15, '20230124 10:23:00');
+(1, 1, 83987283746, 1, 6, '20220226 14:34:00', NULL, NULL),
+(2, 2, 8897328467, 1, 7, '20220228 16:01:00', NULL, NULL),
+(3, 2, 8348976348, 1, 8, '20220301 12:30:00', NULL, NULL),
+(4, 1, 83980394237, 0, 9, '20220306 09:08:00', NULL, NULL),
+(5, 1, 85990378264, 0, 10, '20220513 12:26:00', NULL, NULL),
+(6, 2, 8330784632, 1, 11, '20220630 15:25:00', NULL, NULL),
+(7, 1, 11994839283, 1, 12, '20220829 12:39:00', NULL, NULL),
+(8, 2, 6998372488, 1, 13, '20221218 11:35:00', NULL, NULL),
+(9, 2, 8580384692, 1, 14, '20230104 06:32:00', NULL, NULL),
+(10, 1, 83984034008, 0, 15, '20230124 10:23:00', NULL, NULL);
 
 INSERT INTO tipo_conta VALUES 
 (1,'Conta Corrente', 2, '20220222 15:45:00'),
@@ -316,26 +315,26 @@ INSERT INTO status VALUES
 (3,'Suspensa');
 
 INSERT INTO conta VALUES 
-(1, 1, 1, 1900.50, 6020, 50023125, 6, '20220226 14:34:00', 6, '20220226 14:34:00'),
-(2, 3, 1, 2450.00, 6012, 73296498, 7, '20220228 16:01:00', 7, '20220228 16:01:00'),
-(3, 3, 1, 21424.20, 6012, 93824793, 8, '20220301 12:30:00', 8, '20220301 12:30:00'),
-(4, 1, 1, 19.46, 6020, 32984783, 9, '20220306 09:08:00', 9, '20220306 09:08:00'),
-(5, 3, 2, 250.00, 6015, 07439264, 10, '20220513 12:26:00', 2, '20230113 19:27:00'),
-(6, 1, 1, 10021.75, 3020, 43209890, 11, '20220630 15:25:00', 11, '20220630 15:25:00'),
-(7, 1, 1, 93200.45, 3020, 92183799, 12, '20220829 12:39:00', 12, '20220829 12:39:00'),
-(8, 3, 1, 1000000.32, 4002, 75438976, 13, '20221218 11:35:00', 13, '20221218 11:35:00'),
-(9, 1, 1, 1.50, 4045, 17283893, 14, '20230104 06:32:00', 14, '20230104 06:32:00'),
-(10, 2, 3, 0.00, 1020, 19827634, 15, '20230124 10:23:00', 2, '20230207 16:13:00');
+(1, 1, 1, 1900.50, 6020, 50023125, 6, '20220226 14:34:00', NULL, NULL),
+(2, 3, 1, 2450.00, 6012, 73296498, 7, '20220228 16:01:00', NULL, NULL),
+(3, 3, 1, 21424.20, 6012, 93824793, 8, '20220301 12:30:00', NULL, NULL),
+(4, 1, 1, 19.46, 6020, 32984783, 9, '20220306 09:08:00', NULL, NULL),
+(5, 3, 2, 250.00, 6015, 07439264, 10, '20220513 12:26:00', NULL, NULL),
+(6, 1, 1, 10021.75, 3020, 43209890, 11, '20220630 15:25:00', NULL, NULL),
+(7, 1, 1, 93200.45, 3020, 92183799, 12, '20220829 12:39:00', NULL, NULL),
+(8, 3, 1, 1000000.32, 4002, 75438976, 13, '20221218 11:35:00', NULL, NULL),
+(9, 1, 1, 1.50, 4045, 17283893, 14, '20230104 06:32:00', NULL, NULL),
+(10, 2, 3, 0.00, 1020, 19827634, 15, '20230124 10:23:00', NULL, NULL);
 
 INSERT INTO emprestimo VALUES 
-(1, 0.00, 0, 0.00, 0, 2, '20220226 14:34:00', 2, '20220226 14:34:00'),
-(2, 0.00, 0, 0.00, 0, 2, '20220228 16:01:00', 2, '20220228 16:01:00'),
-(3, 0.00, 0, 0.00, 0, 3, '20220301 12:30:00', 3, '20220301 12:30:00'),
-(4, 0.00, 0, 0.00, 0, 2, '20220306 09:08:00', 2, '20220306 09:08:00'),
-(6, 0.00, 0, 0.00, 0, 3, '20220630 15:25:00', 3, '20220630 15:25:00'),
-(7, 0.00, 0, 0.00, 0, 2, '20220829 12:39:00', 2, '20220829 12:39:00'),
-(8, 0.00, 0, 0.00, 0, 4, '20221218 11:35:00', 4, '20221218 11:35:00'),
-(9, 0.00, 0, 0.00, 0, 4, '20230104 06:32:00', 4, '20230104 06:32:00');
+(1, 0.00, 0, 0.00, 0, 2, '20220226 14:34:00', NULL, NULL),
+(2, 0.00, 0, 0.00, 0, 2, '20220228 16:01:00', NULL, NULL),
+(3, 0.00, 0, 0.00, 0, 3, '20220301 12:30:00', NULL, NULL),
+(4, 0.00, 0, 0.00, 0, 2, '20220306 09:08:00', NULL, NULL),
+(6, 0.00, 0, 0.00, 0, 3, '20220630 15:25:00', NULL, NULL),
+(7, 0.00, 0, 0.00, 0, 2, '20220829 12:39:00', NULL, NULL),
+(8, 0.00, 0, 0.00, 0, 4, '20221218 11:35:00', NULL, NULL),
+(9, 0.00, 0, 0.00, 0, 4, '20230104 06:32:00', NULL, NULL);
 
 INSERT INTO tipo_movimentacao VALUES 
 (1, 'deposito', 1, '20220215 17:33:56'),
@@ -343,16 +342,16 @@ INSERT INTO tipo_movimentacao VALUES
 (3, 'transferencia', 1, '20220215 17:33:56');
 
 INSERT INTO extrato VALUES 
-(1, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
-(2, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
-(3, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
-(4, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
-(5, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
-(6, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
-(7, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
-(8, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
-(9, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56'),
-(10, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', 1, '20220215 17:33:56');
+(1, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL),
+(2, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL),
+(3, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL),
+(4, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL),
+(5, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL),
+(6, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL),
+(7, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL),
+(8, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL),
+(9, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL),
+(10, 1, '20220215 17:33:56', 0.00, NULL, 1, '20220215 17:33:56', NULL, NULL);
 
 
 
