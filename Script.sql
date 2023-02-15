@@ -24,7 +24,7 @@ CREATE TABLE cliente(
 	id INT PRIMARY KEY IDENTITY,
 	nome VARCHAR(60),
 	sobrenome VARCHAR(100),
-	CPF BIGINT NOT NULL,
+	CPF BIGINT NOT NULL UNIQUE,
 	data_nascimento DATETIME NOT NULL,
 	usuario_cadastro INT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
