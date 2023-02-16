@@ -327,9 +327,19 @@ INSERT INTO conta VALUES
 (10, 2, 3, 0.00, 1020, 19827634, 15, '20230124 10:23:00', NULL, NULL);
 
 INSERT INTO emprestimo VALUES 
-(1, 0.00, 0, 0.00, '20220105', 2, '20220226 14:34:00', NULL, NULL),
-(2, 0.00, 0, 0.00, '20220105', 2, '20220228 16:01:00', NULL, NULL),
-(3, 0.00, 0, 0.00, '20220105', 3, '20220301 12:30:00', NULL, NULL),
+(2, 1000, 10, 100, '20190910', 2, '20220226 14:34:00', NULL, NULL),
+(1, 1000, 3, 200, '20220802', 2, '20220228 16:01:00', NULL, NULL),
+(3, 6000, 5, 160, '20150924', 3, '20220301 12:30:00', NULL, NULL),
+(1, 9000, 9, 100, '20130917', 2, '20220306 09:08:00', NULL, NULL),
+(2, 7000, 5, 140, '20180523', 3, '20220630 15:25:00', NULL, NULL),
+(3, 7000, 12, 580, '20190911', 4, '20221218 11:35:00', NULL, NULL),
+(2, 5000, 5, 100, '20220930', 4, '20230104 06:32:00', NULL, NULL),
+(3, 9500, 8, 118, '20210502', 3, '20210302 08:43:00', NULL, NULL),
+(2, 7050, 5, 150, '20200512', 2, '20230806 09:34:00', NULL, NULL),
+(1, 1000, 10, 100, '20230430', 4, '20220512 13:45:00', NULL, NULL),
+(1, 4900, 4, 100, '20230215', 2, '20220709 12:59:00', NULL, NULL),
+(2, 8950, 5, 170, '20200518', 3, '20210614 22:03:00', NULL, NULL),
+(3, 6900, 4, 200, '20210918', 4, '20190719 20:28:00', NULL, NULL),
 (4, 0.00, 0, 0.00, '20220105', 2, '20220306 09:08:00', NULL, NULL),
 (6, 0.00, 0, 0.00, '20220105', 3, '20220630 15:25:00', NULL, NULL),
 (7, 0.00, 0, 0.00, '20220105', 2, '20220829 12:39:00', NULL, NULL),
@@ -433,6 +443,8 @@ GO
 
 
 
+
+
 ---------------------------------------SP DEPOSITO CONTA BANCO--------------------------------------------
 IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.DepositoConta]') AND objectproperty(ID,N'isProcedure') = 1)
 	DROP PROCEDURE [SP.DepositoConta]	
@@ -463,6 +475,14 @@ CREATE PROCEDURE [SP.DepositoConta]
 GO
 
 
+
+
+
+
+
+
+
+
 ---------------------------------------SP SAQUE CONTA BANCO--------------------------------------------
 IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.SaqueConta]') AND objectproperty(ID,N'isProcedure') = 1)
 	DROP PROCEDURE [SP.SaqueConta]	
@@ -491,6 +511,14 @@ CREATE PROCEDURE [SP.SaqueConta]
 		RETURN 0
 	END
 GO
+
+
+
+
+
+
+
+
 
 
 ---------------------------------------SP TRANSFERENCIA CONTA BANCO--------------------------------------------
@@ -530,6 +558,10 @@ GO
 
 
 
+
+
+
+
 ---------------------------------------SP EXTRATO CLIENTE SMN--------------------------------------------
 IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.ExtratoConta]') AND objectproperty(ID,N'isProcedure') = 1)
 	DROP PROCEDURE [SP.ExtratoConta]	
@@ -551,7 +583,11 @@ CREATE PROCEDURE [SP.ExtratoConta]
 	*/
 
 	BEGIN 
-		SELECT CONCAT(cl.nome,' ' ,cl.sobrenome) AS 'Nome Completo', tm.descricao AS 'Tipo Movimentacao',ex.valor AS Valor, ex.data AS 'Data Transacao', ex.usuario_transferido
+		SELECT CONCAT(cl.nome,' ' ,cl.sobrenome) AS 'Nome Completo', 
+		tm.descricao AS 'Tipo Movimentacao',
+		ex.valor AS Valor, 
+		ex.data AS 'Data Transacao', 
+		ex.usuario_transferido AS 'Usuario Transferencia'
 		FROM extrato ex
 		INNER JOIN conta ct
 		ON ex.id_conta = ct.id
@@ -564,10 +600,103 @@ CREATE PROCEDURE [SP.ExtratoConta]
 	END
 GO
 
+
+
+
+
+
+
+
+
+
+---------------------------------------SP INADIMPLENCIA CLIENTE SMN--------------------------------------------
+IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.Inadiplencia]') AND objectproperty(ID,N'isProcedure') = 1)
+	DROP PROCEDURE [SP.Inadimplencia]	
+
+GO
+
+CREATE PROCEDURE [SP.Inadimplencia]
+	AS
+
+	/*Documentação
+	Arquivo Fonte ......: Script.sql
+	Objetivo ...........: Apresenta o relatorio com todos os clientes com alguma inadimplencia de pagamentos de emprestimos
+							return 0 - execuçao ok
+
+	Autor ..............: Gabriel Gouveia
+	Data ...............: 16/02/2023
+	Ex .................: EXEC [SP.Inadimplencia]
+	*/
+
+	BEGIN 
+		SELECT CONCAT(cl.nome,' ' ,cl.sobrenome) AS 'Nome Completo',
+		em.valor AS 'Valor Emprestimo', 
+		CONCAT('Dia ',DAY(em.fechamento_parcela)) AS 'Fechamento Parcela',
+		CONCAT(DAY(GETDATE()) - DAY(em.fechamento_parcela), ' Dias') AS 'Dias Atraso'
+		FROM emprestimo em
+		INNER JOIN conta ct
+		ON em.id_conta = ct.id
+		INNER JOIN cliente cl
+		ON ct.id_cliente = cl.id
+		WHERE em.valor > 0 AND DAY(GETDATE()) - DAY(em.fechamento_parcela) > 0
+		ORDER BY [Nome Completo] ASC
+		RETURN 0
+	END
+GO
+
+
+
+
+
+
+
+
+
+
+---------------------------------------SP DIVIDA CLIENTE SMN--------------------------------------------
+IF EXISTS(SELECT TOP 1 1 FROM sysobjects WHERE ID = object_id(N'[SP.DividaCliente]') AND objectproperty(ID,N'isProcedure') = 1)
+	DROP PROCEDURE [SP.DividaCliente]	
+
+GO
+
+CREATE PROCEDURE [SP.DividaCliente]
+	@id_cliente INT
+	AS
+
+	/*Documentação
+	Arquivo Fonte ......: Script.sql
+	Objetivo ...........: Apresenta o relatorio com todos os clientes com alguma inadimplencia de pagamentos de emprestimos
+							return 0 - execuçao ok
+
+	Autor ..............: Gabriel Gouveia
+	Data ...............: 16/02/2023
+	Ex .................: EXEC [SP.DividaCliente] @id_cliente = 1
+	*/
+
+	BEGIN 
+		SELECT CONCAT(cl.nome,' ' ,cl.sobrenome) AS 'Nome Completo', 
+		em.valor AS 'Valor Emprestimo', 
+		CONCAT('Dia ',DAY(em.fechamento_parcela)) AS 'Fechamento Parcela', 
+		CONCAT(DAY(GETDATE()) - DAY(em.fechamento_parcela), ' Dias') AS 'Dias Atraso',
+		em.valor_parcela AS 'Valor Parcela', 
+		CAST(em.valor_parcela * (((DAY(GETDATE()) - DAY(em.fechamento_parcela)) * 0.059)) AS MONEY) AS 'Valor Juros', 
+		CAST(em.valor_parcela + (em.valor_parcela * (((DAY(GETDATE()) - DAY(em.fechamento_parcela)) * 0.059))) AS MONEY) AS 'Valor Parcela + Juros'
+		FROM emprestimo em
+		INNER JOIN conta ct
+		ON em.id_conta = ct.id
+		INNER JOIN cliente cl
+		ON ct.id_cliente = cl.id
+		WHERE cl.id = @id_cliente AND em.valor > 0 AND DAY(GETDATE()) - DAY(em.fechamento_parcela) > 0
+		ORDER BY [Nome Completo] ASC
+		RETURN 0
+	END
+GO
+
 ---podem ignorar os comandos debaixo---
-select * from conta
-select * from extrato
-select * from tipo_movimentacao
+select * from conta;
+select * from extrato;
+select * from tipo_movimentacao;
+select * from emprestimo;
 
 SELECT cl.nome, cl.sobrenome, ct.saldo FROM conta ct
 INNER JOIN cliente cl
