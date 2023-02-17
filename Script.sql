@@ -117,6 +117,7 @@ CREATE TABLE emprestimo(
 	quantidade_parcelas TINYINT NOT NULL,
 	valor_parcela MONEY NOT NULL,
 	fechamento_parcela DATE NOT NULL,
+	data_pagamento DATE DEFAULT(NULL),
 	usuario_cadastro INT NOT NULL,
 	data_cadastro DATETIME NOT NULL,
 	usuario_ultima_alteracao INT,
@@ -327,24 +328,24 @@ INSERT INTO conta VALUES
 (10, 2, 3, 0.00, 1020, 19827634, 15, '20230124 10:23:00', NULL, NULL);
 
 INSERT INTO emprestimo VALUES 
-(2, 1000, 10, 100, '20190910', 2, '20220226 14:34:00', NULL, NULL),
-(1, 1000, 5, 200, '20220802', 2, '20220228 16:01:00', NULL, NULL),
-(3, 4000, 5, 800, '20150924', 3, '20220301 12:30:00', NULL, NULL),
-(1, 1000, 2, 500, '20130917', 2, '20220306 09:08:00', NULL, NULL),
-(2, 8000, 8, 1000, '20180523', 3, '20220630 15:25:00', NULL, NULL),
-(3, 16000, 10, 160, '20190911', 4, '20221218 11:35:00', NULL, NULL),
-(2, 4000, 2, 2000, '20220930', 4, '20230104 06:32:00', NULL, NULL),
-(3, 2000, 8, 250, '20210502', 3, '20210302 08:43:00', NULL, NULL),
-(2, 2000, 5, 400, '20200512', 2, '20230806 09:34:00', NULL, NULL),
-(1, 8000, 10, 800, '20230430', 4, '20220512 13:45:00', NULL, NULL),
-(1, 16000, 4, 4000, '20230215', 2, '20220709 12:59:00', NULL, NULL),
-(2, 8000, 5, 1600, '20200518', 3, '20210614 22:03:00', NULL, NULL),
-(3, 2000, 4, 500, '20210918', 4, '20190719 20:28:00', NULL, NULL),
-(4, 0.00, 0, 0.00, '20220105', 2, '20220306 09:08:00', NULL, NULL),
-(6, 0.00, 0, 0.00, '20220105', 3, '20220630 15:25:00', NULL, NULL),
-(7, 0.00, 0, 0.00, '20220105', 2, '20220829 12:39:00', NULL, NULL),
-(8, 0.00, 0, 0.00, '20220105', 4, '20221218 11:35:00', NULL, NULL),
-(9, 0.00, 0, 0.00, '20220105', 4, '20230104 06:32:00', NULL, NULL);
+(2, 1000, 10, 100, '20190910', NULL, 2, '20220226 14:34:00', NULL, NULL),
+(1, 1000, 5, 200, '20220802', '20220802', 2, '20220228 16:01:00', NULL, NULL),
+(3, 4000, 5, 800, '20150924', '20150924', 3, '20220301 12:30:00', NULL, NULL),
+(1, 1000, 2, 500, '20130917', NULL, 2, '20220306 09:08:00', NULL, NULL),
+(2, 8000, 8, 1000, '20180523', NULL, 3, '20220630 15:25:00', NULL, NULL),
+(3, 16000, 10, 160, '20190911', NULL, 4, '20221218 11:35:00', NULL, NULL),
+(2, 4000, 2, 2000, '20220930', '20220930', 4, '20230104 06:32:00', NULL, NULL),
+(3, 2000, 8, 250, '20210502', '20200512', 3, '20210302 08:43:00', NULL, NULL),
+(2, 2000, 5, 400, '20200512', NULL, 2, '20230806 09:34:00', NULL, NULL),
+(1, 8000, 10, 800, '20230430', '20230504', 4, '20220512 13:45:00', NULL, NULL),
+(1, 16000, 4, 4000, '20230215', NULL, 2, '20220709 12:59:00', NULL, NULL),
+(2, 8000, 5, 1600, '20200518', '20200518', 3, '20210614 22:03:00', NULL, NULL),
+(3, 2000, 4, 500, '20210918', NULL, 4, '20190719 20:28:00', NULL, NULL),
+(4, 0.00, 0, 0.00, '20220105', NULL, 2, '20220306 09:08:00', NULL, NULL),
+(6, 0.00, 0, 0.00, '20220105', NULL, 3, '20220630 15:25:00', NULL, NULL),
+(7, 0.00, 0, 0.00, '20220105', NULL, 2, '20220829 12:39:00', NULL, NULL),
+(8, 0.00, 0, 0.00, '20220105', NULL, 4, '20221218 11:35:00', NULL, NULL),
+(9, 0.00, 0, 0.00, '20220105', NULL, 4, '20230104 06:32:00', NULL, NULL);
 
 INSERT INTO tipo_movimentacao VALUES 
 (1, 'deposito', 1, '20220215 17:33:56'),
@@ -638,7 +639,7 @@ CREATE PROCEDURE [SP.Inadimplencia]
 		ON em.id_conta = ct.id
 		INNER JOIN cliente cl
 		ON ct.id_cliente = cl.id
-		WHERE em.valor > 0 AND DAY(GETDATE()) - DAY(em.fechamento_parcela) > 0
+		WHERE em.valor > 0 AND DAY(GETDATE()) - DAY(em.fechamento_parcela) > 0 AND em.data_pagamento IS NULL
 		ORDER BY [Nome Completo] ASC;
 		RETURN 0
 	END
@@ -676,7 +677,7 @@ CREATE PROCEDURE [SP.DividaCliente]
 	BEGIN 
 		SELECT CONCAT(cl.nome,' ' ,cl.sobrenome) AS 'Nome Completo', 
 		em.valor AS 'Valor Emprestimo', 
-		CONCAT('Dia ',DAY(em.fechamento_parcela)) AS 'Fechamento Parcela', 
+		CONCAT('Dia ',DAY(em.fechamento_parcela)) AS 'Fechamento Parcela',
 		CONCAT(DAY(GETDATE()) - DAY(em.fechamento_parcela), ' Dias') AS 'Dias Atraso',
 		em.valor_parcela AS 'Valor Parcela', 
 		CAST(em.valor_parcela * (((DAY(GETDATE()) - DAY(em.fechamento_parcela)) * 0.059)) AS MONEY) AS 'Valor Juros', 
@@ -686,7 +687,7 @@ CREATE PROCEDURE [SP.DividaCliente]
 		ON em.id_conta = ct.id
 		INNER JOIN cliente cl
 		ON ct.id_cliente = cl.id
-		WHERE cl.id = @id_cliente AND em.valor > 0 AND DAY(GETDATE()) - DAY(em.fechamento_parcela) > 0
+		WHERE cl.id = @id_cliente AND em.valor > 0 AND DAY(GETDATE()) - DAY(em.fechamento_parcela) > 0 AND em.data_pagamento IS NULL
 		ORDER BY [Nome Completo] ASC;
 		RETURN 0
 	END
