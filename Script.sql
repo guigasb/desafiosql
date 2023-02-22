@@ -393,7 +393,7 @@ CREATE PROCEDURE [SP.InsCliente]
 
 	BEGIN 
 		INSERT INTO cliente
-		VALUES (@nome,@sobrenome,@CPF,@data_nascimento,@usuario, GETDATE(),@usuario,GETDATE())
+		VALUES (@nome,@sobrenome,@CPF,@data_nascimento,@usuario, GETDATE(),NULL,NULL)
 		RETURN 0
 	END
 GO
@@ -415,7 +415,8 @@ GO
 
 CREATE PROCEDURE [SP.UpStatus]
 	@status TINYINT,
-	@id_cliente INT
+	@id_cliente INT,
+	@id_usuario INT
 	AS
 
 	/*Documentação
@@ -428,11 +429,11 @@ CREATE PROCEDURE [SP.UpStatus]
 
 	Autor ..............: Gabriel Gouveia
 	Data ...............: 16/02/2023
-	Ex .................: EXEC [SP.UpStatus] @status = 3, @id_cliente = 10
+	Ex .................: EXEC [SP.UpStatus] @status = 3, @id_cliente = 10, @id_usuario = 1
 	*/
 
 	BEGIN 
-		UPDATE conta SET id_status = @status WHERE id_cliente = @id_cliente 
+		UPDATE conta SET id_status = @status, usuario_ultima_alteracao = @id_usuario, data_ultima_alteracao = GETDATE() WHERE id_cliente = @id_cliente 
 		RETURN 0
 	END
 GO
