@@ -840,12 +840,12 @@ CREATE PROCEDURE [SP.ExtratoConta]
 		ex.valor AS Valor, 
 		ex.data AS 'Data Transacao', 
 		ex.usuario_transferido AS 'Usuario Transferencia'
-		FROM extrato ex
-		INNER JOIN conta ct
-		ON ex.id_conta = ct.id
-		INNER JOIN cliente cl
+		FROM extrato ex WITH(NOLOCK)
+		INNER JOIN conta ct WITH(NOLOCK)
+		ON ex.id_conta = ct.id 
+		INNER JOIN cliente cl WITH(NOLOCK)
 		ON ct.id_cliente = cl.id
-		INNER JOIN tipo_movimentacao tm
+		INNER JOIN tipo_movimentacao tm WITH(NOLOCK)
 		ON tm.id = ex.id_tipo_movimentacao
 		WHERE cl.id = @id_cliente;
 		RETURN 0
@@ -886,10 +886,10 @@ CREATE PROCEDURE [SP.Inadimplencia]
 		em.valor AS 'Valor Emprestimo', 
 		CONCAT('Dia ',DAY(em.fechamento_parcela)) AS 'Fechamento Parcela',
 		CONCAT(DAY(GETDATE()) - DAY(em.fechamento_parcela), ' Dias') AS 'Dias Atraso'
-		FROM emprestimo em
-		INNER JOIN conta ct
+		FROM emprestimo em WITH(NOLOCK)
+		INNER JOIN conta ct WITH(NOLOCK)
 		ON em.id_conta = ct.id
-		INNER JOIN cliente cl
+		INNER JOIN cliente cl WITH(NOLOCK)
 		ON ct.id_cliente = cl.id
 		WHERE em.valor > 0 AND DAY(GETDATE()) - DAY(em.fechamento_parcela) > 0 AND em.data_pagamento IS NULL
 		ORDER BY [Nome Completo] ASC;
@@ -934,11 +934,11 @@ CREATE PROCEDURE [SP.DividaCliente]
 		em.valor_parcela AS 'Valor Parcela', 
 		CAST(em.valor_parcela * (((DAY(GETDATE()) - DAY(em.fechamento_parcela)) * 0.059)) AS MONEY) AS 'Valor Juros', 
 		CAST(em.valor_parcela + (em.valor_parcela * (((DAY(GETDATE()) - DAY(em.fechamento_parcela)) * 0.059))) AS MONEY) AS 'Valor Parcela + Juros'
-		FROM emprestimo em
-		INNER JOIN conta ct
+		FROM emprestimo em WITH(NOLOCK)
+		INNER JOIN conta ct WITH(NOLOCK)
 		ON em.id_conta = ct.id
-		INNER JOIN cliente cl
-		ON ct.id_cliente = cl.id
+		INNER JOIN cliente cl WITH(NOLOCK)
+		ON ct.id_cliente = cl.id WITH(NOLOCK)
 		WHERE cl.id = @id_cliente AND em.valor > 0 AND DAY(GETDATE()) - DAY(em.fechamento_parcela) > 0 AND em.data_pagamento IS NULL
 		ORDER BY [Nome Completo] ASC;
 		RETURN 0
