@@ -938,7 +938,7 @@ CREATE PROCEDURE [SP.DividaCliente]
 		INNER JOIN conta ct WITH(NOLOCK)
 		ON em.id_conta = ct.id
 		INNER JOIN cliente cl WITH(NOLOCK)
-		ON ct.id_cliente = cl.id WITH(NOLOCK)
+		ON ct.id_cliente = cl.id
 		WHERE cl.id = @id_cliente AND em.valor > 0 AND DAY(GETDATE()) - DAY(em.fechamento_parcela) > 0 AND em.data_pagamento IS NULL
 		ORDER BY [Nome Completo] ASC;
 		RETURN 0
