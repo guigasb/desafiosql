@@ -336,17 +336,6 @@ INSERT INTO cidade VALUES
 (27,'Brasilia'),
 (27,'Ceilândia');
 
-
-/*
-CPF - 11 numeros
-CEP - 8 numeros
-NUMERO - DDD+9+NUMERO
-AGENCIA - 4 numeros
-NUMERO(da conta) - 8 numeros
-
-Id Usuario Funcionarios: 1 ao 5
-id Usuario Clientes: 6 ao 15 (nao confundir com cliente(id))
-*/
 INSERT INTO endereco VALUES 
 (14, 1, 'Rua José de Alencar', '123', 'Centro', 58400275, 'Apartamento 101', 1, '20220220 10:35:40', NULL, NULL),
 (14, 2, 'Rua Vigário Calixto', '456', 'Prata', 58400340, 'Apartamento 303', 6, '20220222 14:50:12', NULL, NULL),
@@ -635,8 +624,8 @@ CREATE PROCEDURE [SP.InsCliente]
 	Objetivo ...........: Insere um novo cliente na tabela Cliente
 							return 0 - execuçao ok
 
-	Autor ..............: Gabriel Gouveia
-	Data ...............: 16/02/2023
+	Autor ..............: Gabriel Gouveia, Andressa, Mateus, Guilherme, Jorge
+	Data ...............: 22/02/2023
 	Ex .................: EXEC [SP.InsCliente] @nome = 'Matias', @sobrenome = 'Santos', @CPF = 89258014738, @data_nascimento = '19670518', @usuario = 1
 	Códigos de retorno: 0 - excução ok
 	*/
@@ -677,8 +666,8 @@ CREATE PROCEDURE [SP.UpStatus]
 									 2 = Inativo
 									 3 = Suspensa
 
-	Autor ..............: Gabriel Gouveia
-	Data ...............: 16/02/2023
+	Autor ..............: Gabriel Gouveia, Andressa, Mateus, Guilherme, Jorge
+	Data ...............: 22/02/2023
 	Ex .................: EXEC [SP.UpStatus] @status = 3, @id_cliente = 10, @id_usuario = 1
 	*/
 
@@ -714,8 +703,8 @@ CREATE PROCEDURE [SP.DepositoConta]
 	Objetivo ...........: Faz o deposito de dinheiro em uma conta de um cliente
 							return 0 - execuçao ok
 
-	Autor ..............: Gabriel Gouveia
-	Data ...............: 16/02/2023
+	Autor ..............: Gabriel Gouveia, Andressa, Mateus, Guilherme, Jorge
+	Data ...............: 22/02/2023
 	Ex .................: EXEC [SP.DepositoConta] @valor = 100.00, @id_conta = 1, @id_usuario = 3
 	*/
 
@@ -752,8 +741,8 @@ CREATE PROCEDURE [SP.SaqueConta]
 	Objetivo ...........: Faz o saque de dinheiro em uma conta de um cliente
 							return 0 - execuçao ok
 
-	Autor ..............: Gabriel Gouveia
-	Data ...............: 16/02/2023
+	Autor ..............: Gabriel Gouveia, Andressa, Mateus, Guilherme, Jorge
+	Data ...............: 22/02/2023
 	Ex .................: EXEC [SP.SaqueConta] @valor = 100.00, @id_conta = 1, @id_usuario = 3
 	*/
 
@@ -791,8 +780,8 @@ CREATE PROCEDURE [SP.TransfConta]
 	Objetivo ...........: Faz a transferencia de dinheiro em uma conta e outra de clientes
 							return 0 - execuçao ok
 
-	Autor ..............: Gabriel Gouveia
-	Data ...............: 16/02/2023
+	Autor ..............: Gabriel Gouveia, Andressa, Mateus, Guilherme, Jorge
+	Data ...............: 22/02/2023
 	Ex .................: EXEC [SP.TransfConta] @valor = 100.00, @id_conta = 1, @conta_transferencia = 2, @id_usuario = 3
 	*/
 
@@ -829,8 +818,8 @@ CREATE PROCEDURE [SP.ExtratoConta]
 	Objetivo ...........: Apresenta o relatorio com todo o extrato de transacoes de um cliente
 							return 0 - execuçao ok
 
-	Autor ..............: Gabriel Gouveia
-	Data ...............: 16/02/2023
+	Autor ..............: Gabriel Gouveia, Andressa, Mateus, Guilherme, Jorge
+	Data ...............: 22/02/2023
 	Ex .................: EXEC [SP.ExtratoConta] @id_cliente = 1
 	*/
 
@@ -875,8 +864,8 @@ CREATE PROCEDURE [SP.Inadimplencia]
 	Objetivo ...........: Apresenta o relatorio com todos os clientes com alguma inadimplencia de pagamentos de emprestimos
 							return 0 - execuçao ok
 
-	Autor ..............: Gabriel Gouveia
-	Data ...............: 16/02/2023
+	Autor ..............: Gabriel Gouveia, Andressa, Mateus, Guilherme, Jorge
+	Data ...............: 22/02/2023
 	Ex .................: EXEC [SP.Inadimplencia]
 	*/
 
@@ -921,8 +910,8 @@ CREATE PROCEDURE [SP.DividaCliente]
 	Objetivo ...........: Apresenta o relatorio de quanto um determinado cliente deve ao banco de acordo com suas dividas e taxas
 							return 0 - execuçao ok
 
-	Autor ..............: Gabriel Gouveia
-	Data ...............: 16/02/2023
+	Autor ..............: Gabriel Gouveia, Andressa, Mateus, Guilherme, Jorge
+	Data ...............: 22/02/2023
 	Ex .................: EXEC [SP.DividaCliente] @id_cliente = 31
 	*/
 
@@ -944,15 +933,3 @@ CREATE PROCEDURE [SP.DividaCliente]
 		RETURN 0
 	END
 GO
-
----podem ignorar os comandos debaixo---
-select * from conta;
-select * from extrato;
-select * from tipo_movimentacao;
-select * from emprestimo;
-
-SELECT cl.nome, cl.sobrenome, ct.saldo FROM conta ct
-INNER JOIN cliente cl
-ON ct.id_cliente = cl.id;
-
---datetimenow
