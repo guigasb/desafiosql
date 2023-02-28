@@ -1,0 +1,50 @@
+4.000.000.000 int
+32.000 small int
+256 tiny int
+
+CPF - 11 numeros
+CEP - 8 numeros
+NUMERO - DDD+9+NUMERO
+AGENCIA - 4 numeros
+NUMERO(da conta) - 8 numeros
+
+DOMÍNIOS NAO SAO IDENTITY!!!!(inserts dos id's sao manuais)
+Domínio: pontuacao / tipo usuario / status / tipo conta / tipo contato / uf
+
+id usuario funcionarios: 1 ao 5
+id usuario clientes: 6 ao 15
+
+Tipo_usuario:
+1 = Administrador
+2 = Clientes
+3 = Funcionario
+
+Tipo_contato: 
+1 = Celular
+2 = Telefone Residencial
+
+Tipo_conta: 
+1 = Conta Corrente
+2 = Poupanca 
+3 = Conta Corrente e Poupanca
+
+Tipo_movimentacao:
+1 = deposito
+2 = saque
+3 = transferencia
+
+Status:
+1 = Ativo
+2 = Inativo
+3 = Suspensa
+Nota: as tabelas extratos e empréstimos estão vazias, se quiser alterar elas, tem que dar um update (update [table] SET [atributos] = [novo valor] WHERE id = [id da conta que quiser mudar]) 
+
+Usuario:
+1 - Gabriel - Adm
+2 - Guilherme - Funcionario 
+3 - Andressa - Funcionario
+4 - Jorge - Funcionario
+5 - Mateus - Funcionario
+
+Resto dos ID's são do tipo clientes
+
